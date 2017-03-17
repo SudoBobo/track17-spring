@@ -40,11 +40,11 @@ public abstract class List {
         return positionOfLastElement + 1;
     }
 
-    protected boolean isIndexValid(int idx) {
+    protected final boolean isIndexValid(int idx) {
         return (0 <= idx) && (idx <= positionOfLastElement);
     }
 
-    protected void checkIndex(int idx) throws NoSuchElementException {
+    protected final void checkIndex(int idx) throws NoSuchElementException {
         if (!(isIndexValid(idx))) {
             throw new NoSuchElementException();
         }
