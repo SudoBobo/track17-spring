@@ -8,8 +8,8 @@ import java.util.NoSuchElementException;
  */
 public class MyLinkedList extends List implements Stack, Queue {
 
-    private Node head;
-    private Node tail;
+    private Node head = null;
+    private Node tail = null;
 
 
     /**
@@ -35,38 +35,43 @@ public class MyLinkedList extends List implements Stack, Queue {
 
         if (head == null) {
             head = new Node(null, null, item);
-            tail = head;
-        } else {
-            tail = new Node(tail, null, item);
+        } else if ((tail == null) && (head != null)) {
+            tail = new Node(head, null, item);
+            head.next = tail;
+        } else if ((tail != null) && (head != null)) {
+            Node newTail = new Node(tail, null, item);
+            tail.next = newTail;
+            tail = newTail;
         }
-
         positionOfLastElement++;
     }
 
     @Override
     int remove(int idx) throws NoSuchElementException {
         checkIndex(idx);
-        Node node = getNodeByIndex(idx);
+        Node node = getNode(idx);
         int value = node.val;
-        deleteNode(idx);
+        deleteNode(node);
         return value;
     }
 
-    private void deleteNode(int idx) {
-        Node node = getNodeByIndex(idx);
-        if (idx == 0) {
-            head = node.next;
+    private void deleteNode(Node node) {
+        if ((node == head) && (tail == null)) {
+            head = null;
+        } else if ((node == head) && (tail != null) && (positionOfLastElement == 1)) {
+            head = tail;
+            tail = null;
+        } else if ((node == head) && (tail != null) && (1 < positionOfLastElement)) {
+            head = head.next;
             head.prev = null;
-        }
-
-        if (idx == positionOfLastElement) {
-            tail = node.prev;
+        } else if ((node != head) && (node != tail)) {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+        } else if ((node == tail) && (positionOfLastElement == 1)) {
+            tail = null;
+        } else if ((node == tail) && (1 < positionOfLastElement)) {
+            tail = tail.prev;
             tail.next = null;
-        }
-
-        if ((0 < idx) && (idx < positionOfLastElement)) {
-            getNodeByIndex(idx - 1).next = getNodeByIndex(idx + 1);
-            getNodeByIndex(idx + 1).prev = getNodeByIndex(idx - 1);
         }
         positionOfLastElement--;
     }
@@ -75,7 +80,7 @@ public class MyLinkedList extends List implements Stack, Queue {
     @Override
     int get(int idx) throws NoSuchElementException {
         checkIndex(idx);
-        return getNodeByIndex(idx).val;
+        return getNode(idx).val;
     }
 
     @Override
@@ -87,8 +92,8 @@ public class MyLinkedList extends List implements Stack, Queue {
     public int pop() {
         positionOfLastElement--;
         int value = tail.val;
-        tail.prev.next = null;
         tail = tail.prev;
+        tail.next = null;
         return value;
     }
 
@@ -104,12 +109,13 @@ public class MyLinkedList extends List implements Stack, Queue {
     public int dequeu() {
         positionOfLastElement--;
         int value = tail.val;
-        tail.prev.next = null;
         tail = tail.prev;
+        tail.next = null;
         return value;
     }
 
-    private Node getNodeByIndex(int idx) {
+    private Node getNode(int idx) {
+        checkIndex(idx);
         Node result = head;
         for (int i = 0; i < idx; i++) {
             result = result.next;

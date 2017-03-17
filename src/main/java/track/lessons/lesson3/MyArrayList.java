@@ -13,7 +13,6 @@ import static java.lang.System.arraycopy;
  */
 public class MyArrayList extends List {
     private int[] array;
-    private int positionOfLastElement;
 
     public MyArrayList() {
         array = new int[1];
@@ -27,8 +26,8 @@ public class MyArrayList extends List {
 
     @Override
     void add(int item) {
-        if (array.length <= positionOfLastElement + 1) {
-            int[] newArray = new int[2 * array.length];
+        if (array.length == positionOfLastElement + 1) {
+            int[] newArray = new int[2 * array.length + 1];
             arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
         }
