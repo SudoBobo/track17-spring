@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
  * Сейчас все методы помечены как abstract - эту метку можно убирать, если вы реализовываете его в этом классе
  */
 public abstract class List {
-    protected int positionOfLastElement;
+    protected int positionOfLastElement = -1;
 
     /**
      * Добавить элемент в конец списка
@@ -36,7 +36,9 @@ public abstract class List {
     /**
      * Кол-во элементов списка
      */
-    abstract int size();
+    public int size() {
+        return positionOfLastElement + 1;
+    }
 
     protected boolean isIndexValid(int idx) {
         return (0 <= idx) && (idx <= positionOfLastElement);
@@ -47,7 +49,6 @@ public abstract class List {
             throw new NoSuchElementException();
         }
     }
-
 
 
 }

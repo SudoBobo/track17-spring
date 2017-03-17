@@ -17,12 +17,12 @@ public class MyArrayList extends List {
 
     public MyArrayList() {
         array = new int[1];
-        positionOfLastElement = 0;
+        positionOfLastElement = -1;
     }
 
     public MyArrayList(int capacity) {
         array = new int[capacity];
-        positionOfLastElement = 0;
+        positionOfLastElement = -1;
     }
 
     @Override
@@ -59,9 +59,5 @@ public class MyArrayList extends List {
             throw new NoSuchElementException();
         }
     }
-
-    @Override
-    public int size() {
-        return positionOfLastElement + 1;
-    }
 }
+
