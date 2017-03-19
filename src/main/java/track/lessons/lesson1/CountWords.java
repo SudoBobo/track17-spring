@@ -38,7 +38,10 @@ public class CountWords {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             Scanner sc = new Scanner(br);
             while (sc.hasNext()) {
-                sum += getSum(sc.nextLine());
+                String nextLine = sc.nextLine();
+                if (isLong(nextLine)) {
+                    sum += Long.parseLong(nextLine);
+                }
             }
         }
         return sum;
@@ -61,54 +64,24 @@ public class CountWords {
             Scanner sc = new Scanner(br);
             while (sc.hasNext()) {
                 line = sc.nextLine();
-                isLastLine = !sc.hasNext();
-                concatenatedWords.append(concatWordsInLine(line, isLastLine));
+                if ((!isLong(line)) && (!line.isEmpty())) {
+                    concatenatedWords.append(line);
+                    if (sc.hasNext()) {
+                        concatenatedWords.append(" ");
+                    }
+                }
             }
         }
         return concatenatedWords.toString();
     }
 
-
-    private static String concatWordsInLine(String line, boolean isLastLine) {
-        StringBuilder concatenatedLine = new StringBuilder();
-        char []lineArray = line.toCharArray();
-        for (int i = 0; i < lineArray.length; i++) {
-            if (!Character.isDigit(lineArray[i])) {
-                concatenatedLine.append(lineArray[i]);
-
-                if (((i + 1) < lineArray.length) && (Character.isDigit(lineArray[i + 1]))) {
-                    concatenatedLine.append(" ");
-                }
-                if (((i + 1) == lineArray.length) && (!isLastLine)) {
-                    concatenatedLine.append(" ");
-                }
-            }
+    private static boolean isLong(String str) {
+        try {
+            long number = Long.parseLong(str);
+        } catch (NumberFormatException e) {
+            return false;
         }
-        return concatenatedLine.toString();
+        return true;
     }
 
-    private static long getSum(String line) {
-        long sum = 0;
-        StringBuilder number = new StringBuilder();
-        char []lineArray = line.toCharArray();
-        for (char ch : lineArray) {
-            if (Character.isDigit(ch)) {
-                number.append(ch);
-            } else {
-                sum += extractNumber(number);
-            }
-        }
-
-        sum += extractNumber(number);
-        return sum;
-    }
-
-    private static long extractNumber(StringBuilder number) {
-        long result = 0;
-        if (!number.toString().isEmpty()) {
-            result += Long.parseLong(number.toString());
-            number.delete(0, number.length() - 1);
-        }
-        return result;
-    }
 }
